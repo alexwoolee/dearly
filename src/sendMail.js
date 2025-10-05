@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
+import express from "express";
 
 dotenv.config();
 
@@ -10,21 +11,34 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
 
+// Express app setup
+const app  = express();
+const PORT = process.env.PORT || 8080;
+
+// Accept JSON payloads up to 10MB
+app.use(express.json({ limit: "10mb" }));
+
 // Determine config file path
 const configFilePath = process.argv[2] 
   ? path.resolve(process.cwd(), process.argv[2]) // If provided, use the path from command line argument
   : path.join(__dirname, "mail.json"); // Default to mail.json in the same directory
 
-const configRawText = fs.readFileSync(configFilePath, "utf8");
-let emailsData;
-try {
-  const emailsData = JSON.parse(configRawText);
-  emailsData = Array.isArray(parsedJson) ? parsedJson : (parsedJson.records || [parsedJson]);
-} catch {
-  emailsData = configRawText.split(/\r?\n/).map(line => line.trim()).filter(Boolean).map(JSON.parse);
+function loadEmailJobsFromFile(configPath) { // Load and parse email jobs from file
+  const configText = fs.readFileSync(configPath, "utf8");
+  try {
+    const parsed = JSON.parse(configText);
+    return Array.isArray(parsed) ? parsed : (parsed.records || [parsed]);
+  } catch {
+    // NDJSON (one JSON object per line)
+    return configText
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(Boolean)
+      .map(JSON.parse);
+  }
 }
 
-function getMineType(filename) {
+function getMimeType(filename) { // Determine MIME type based on file extension
   const ext = path.extname(filename).toLowerCase(); // Get file extension
   if (ext === ".png")  return "image/png";
   if (ext === ".jpg" || ext === ".jpeg") return "image/jpeg";
@@ -34,69 +48,97 @@ function getMineType(filename) {
   return "application/octet-stream"; // Default fallback
 }
 
-async function main() {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.MAIL_SENDER,
-      pass: process.env.MAIL_PASSWORD,
-    },
-  });
+async function sendEmailJob(job, transporter) { // Send a single email job
+  const assetsDirectory = job.assetsDir || "assets";
+  const recipients = Array.isArray(job.recipients)
+    ? job.recipients
+    : (job.receiver ? [job.receiver] : []);
+  if (!recipients.length) throw new Error("Missing receiver/recipients.");
+  const subject     = job.subject || "Dearly";
+  const signoffName = job.signoffName || process.env.MAIL_SIGNOFF_NAME || "Alex Lee";
+  const imageFiles  = Array.isArray(job.files) ? job.files : (job.file ? [job.file] : []);
 
-
-for (const record of emailsData) {
-  const assetsDir = record.assetsDir || "assets"; // Directory containing assets (Change based on input)
-  const recipientsList = Array.isArray(record.recipients)
-      ? record.recipients
-      : (record.receiver ? [record.receiver] : []);
-  const emailSubject = record.subject || "Dearly"; // Email subject (Change based on input)
-  //const greeting = record.greeting ?? (record.name ? `Hi ${record.name}!` : "Hi!"); // Greeting text (Change based on input)
-  //Change greeting text based on vibe/tone with gemini API
-  const signoffSignature  = record.signoffName || process.env.MAIL_SIGNOFF_NAME;
-  const imageFiles = Array.isArray(record.files) ? record.files : (record.file ? [record.file] : []); // Image files to embed (Change based on input)
-
-  const inLineImages = imageFiles.map((file, i) => {
-    const assetFilePath = path.join(__dirname, assetsDir, file);
+  const inlineImages = imageFiles.map((file, i) => { // Image attachments
+    const assetFilePath = path.join(__dirname, assetsDirectory, file);
     const base64Data = fs.readFileSync(assetFilePath).toString("base64");
-    const contentId = 'img${Date.now()}_${i+1}'; // Unique content ID
+    const contentId = `img${Date.now()}_${i + 1}`; // unique cid
     return {
       filename: file,
       content: Buffer.from(base64Data, "base64"),
       cid: contentId,
-      contentType: getMineType(file),
+      contentType: getMimeType(file),
     };
   });
-  
-  const htmlImageTags = inLineImages
+
+  const inlineImagesHtml = inlineImages // Embed images in HTML
     .map(img => `<img src="cid:${img.cid}" width="225" height="225" alt="${img.filename}" style="display:block;margin:0 auto 16px;" /><br/>`)
     .join("");
 
-  const messageHtml = record.message
-      ? `<p style="margin:0 0 12px 0;">${record.message}</p>`
-      : "";
+  const messageHtml = job.message // Message body
+    ? `<p style="margin:0 0 12px 0;">${job.message}</p>`
+    : "";
   
-  await transporter.sendMail({
-      from: process.env.MAIL_SENDER,
-      to: recipientsList,
-      subject: emailSubject,
-      html: `
-        <div style="text-align:center;">
-          <p style="margin:0 0 12px 0;">Hi!</p>
-          ${messageHtml}
-          ${htmlImageTags}
-          <p style="margin:16px 0 0 0;">${signoffSignature}</p>
-        </div>
-      `, // Replace Hi! with ${greeting} with gemini generated greeting
-      attachments: inLineImages,
-    });
+  const info = await transporter.sendMail({ // Send email
+    from: process.env.MAIL_SENDER,
+    to: recipients,
+    subject: subject,
+    html: `
+      <div style="text-align:center;">
+        <p style="margin:0 0 12px 0;">Hi!</p>
+        ${messageHtml}
+        ${inlineImagesHtml}
+        <p style="margin:16px 0 0 0;">${signoffName}</p>
+      </div>
+    `,
+    attachments: inlineImages,
+  });
 
-    console.log(`Sent: subject="${emailSubject}" to ${recipientsList.join(", ")}`);
-  }
+  return { messageId: info.messageId, to: recipients };
 }
 
-main().catch(console.error);
+const mailTransporter = nodemailer.createTransport({ // Gmail SMTP
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.MAIL_SENDER,
+    pass: process.env.MAIL_PASSWORD,
+  },
+});
+
+app.post("/send", async (req, res) => { // Accepts single job or array of jobs
+  const payload = req.body;
+  const jobs = Array.isArray(payload) ? payload : [payload];
+
+  const results = [];
+  for (const job of jobs) {
+    try {
+      const r = await sendEmailJob(job, mailTransporter);
+      results.push({ ok: true, ...r });
+    } catch (err) {
+      results.push({ ok: false, error: err.message });
+    }
+  }
+  res.json({ results });
+});
+
+app.get("/", (_req, res) => res.send("Mailer is running"));
+app.listen(PORT, () => console.log(`Mailer listening on :${PORT}`));
+
+if (process.argv[2]) {
+  (async () => {
+    const configPath = path.resolve(process.cwd(), process.argv[2]); 
+    const emailJobs = loadEmailJobsFromFile(configPath); // Load jobs from specified file
+    for (const job of emailJobs) {
+      try {
+        const r = await sendEmailJob(job, mailTransporter); // Await the result
+        console.log(`CLI sent: subject="${job.subject || "Dearly"}" to ${r.to.join(", ")}  (id: ${r.messageId})`);
+      } catch (e) {
+        console.error("CLI error:", e.message); 
+      }
+    }
+  })();
+}
 
 
 // Manual Mode - for testing
