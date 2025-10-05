@@ -28,12 +28,12 @@ function Step3({ onNext, onBack, userName, receiverName }) {
 
       
       <form onSubmit={handleSubmit} className="paraImg-form">
-        <div className="minimal-relationship-grid">
+        <div className="relationship-grid">
           {relationships.map((relationship) => (
             <button
               key={relationship.id}
               type="button"
-              className={`minimal-relationship-card ${selectedRelationship === relationship.id ? 'selected' : ''}`}
+              className={`relationship-card ${selectedRelationship === relationship.id ? 'selected' : ''}`}
               onClick={() => setSelectedRelationship(relationship.id)}
             >
               <div className="relationship-icon">{relationship.icon}</div>
