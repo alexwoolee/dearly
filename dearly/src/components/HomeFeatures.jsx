@@ -10,9 +10,9 @@ const HomeFeatures = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
             </div>
-            <h3 className="feature-title">Custom Formats</h3>
+            <h3 className="feature-title">Make It Engaging</h3>
             <p className="feature-description">
-              Choose from beautiful letter formats designed to make your words shine and create lasting impressions.
+              placeholder
             </p>
           </div>
 
@@ -22,9 +22,9 @@ const HomeFeatures = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
               </svg>
             </div>
-            <h3 className="feature-title">Beautiful Templates</h3>
+            <h3 className="feature-title">Beautifully Crafted</h3>
             <p className="feature-description">
-              Access a curated collection of templates for every occasion - birthdays, anniversaries, holidays, and more.
+              placeholder
             </p>
           </div>
 
@@ -36,7 +36,7 @@ const HomeFeatures = () => {
             </div>
             <h3 className="feature-title">Made with Love</h3>
             <p className="feature-description">
-              Every template and format is crafted with care to help you express your feelings in the most meaningful way.
+              placeholder
             </p>
           </div>
         </div>
