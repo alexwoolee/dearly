@@ -13,7 +13,7 @@ const __dirname  = path.dirname(__filename);
 
 // Express app setup
 const app  = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
 
 // Accept JSON payloads up to 10MB
 app.use(express.json({ limit: "10mb" }));
@@ -107,6 +107,7 @@ const mailTransporter = nodemailer.createTransport({ // Gmail SMTP
 });
 
 app.post("/send", async (req, res) => { // Accepts single job or array of jobs
+  if (!req.body) return res.status(400).json({ results: [{ ok: false, error: "Empty body" }] });
   const payload = req.body;
   const jobs = Array.isArray(payload) ? payload : [payload];
 
@@ -123,7 +124,12 @@ app.post("/send", async (req, res) => { // Accepts single job or array of jobs
 });
 
 app.get("/", (_req, res) => res.send("Mailer is running"));
-app.listen(PORT, () => console.log(`Mailer listening on :${PORT}`));
+const server = app.listen(PORT, '127.0.0.1', () => {
+  const addr = server.address();
+  console.log(
+    `[http] listening on ${typeof addr === 'string' ? addr : addr.address + ':' + addr.port}`
+  );
+});
 
 if (process.argv[2]) {
   (async () => {
