@@ -2,22 +2,18 @@ import React from "react";
 import { useState } from "react";
 
 const InputEmail = ({ onEmailSubmit }) => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(""); 
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (email.trim()) {
-      console.log("User email:", email);
-      onEmailSubmit && onEmailSubmit(email);
+    e.preventDefault(); // prevents default behaviour of form (reloading page on submit)
+    if (email.trim()) { // if email exists
+      console.log("sending to email : ", email);
+      onEmailSubmit && onEmailSubmit(email); // submit email
     }
   };
 
   return (
-    <div className="minimal-email-container">
-      <div className="floating-question">
-        <h2 className="question-text">Ready to start your letter?</h2>
-      </div>
-      
+    <div className="email-container">      
       <form onSubmit={handleSubmit} className="minimal-form">
         <div className="large-input-container">
           <input
@@ -25,7 +21,7 @@ const InputEmail = ({ onEmailSubmit }) => {
             placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="large-underline-input"
+            className="large-input"
             required
           />
         </div>
