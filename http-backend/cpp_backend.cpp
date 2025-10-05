@@ -1,3 +1,4 @@
+#define CPPHTTPLIB_OPENSSL_SUPPORT
 #include <iostream>
 #include <string>
 #include "httplib.h" // Assume cpp-httplib is available
