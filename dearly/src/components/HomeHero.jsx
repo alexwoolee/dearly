@@ -15,16 +15,8 @@ const HomeHero = () => {
             Create heartfelt letters with custom formats and templates. 
             Make every message to your loved ones special and memorable.
           </p>
-          
-          {/* Placeholder Button */}
-          <div style={{ marginBottom: '8rem' }}>
-            <button className="cta-button">
-              Start Writing Your Letter
-            </button>
-          </div>
-
           <HomeFeatures />
-
+          {/* Placeholder Button */}
         </div>
       </div>
     </div>
