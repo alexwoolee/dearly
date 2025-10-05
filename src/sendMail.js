@@ -83,7 +83,7 @@ async function sendEmailJob(job, transporter) { // Send a single email job
     to: recipients,
     subject: subject,
     html: `
-      <div style="text-align:center;">
+      <div style="text-align:center;" background-color=rgb(250, 249, 240);>
         <p style="margin:0 0 12px 0;">Hi!</p>
         ${messageHtml}
         ${inlineImagesHtml}

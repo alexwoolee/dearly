@@ -1,6 +1,8 @@
 #include <string>
 #include "apis.h"
 
+using namespace nlohmann;
+
 std::string sendGeminiPrompt(const std::string& prompt, const std::string& GEMINI_KEY) {
 
   /*
@@ -65,20 +67,25 @@ int sendMessage(Mailer mail) {
   // Here, we'll send a simple HTTP POST request to localhost:465 as an example.
   // In real use, you would use an SMTP library for email, but per instructions, we use HTTP.
 
-  httplib::Client cli("localhost", 8000);
+  httplib::Client cli("localhost", 8080);
   cli.set_connection_timeout(5); // seconds
 
   // Prepare a simple JSON payload with subject and name
-  std::string json = "{"
-      "\"subject\":\"" + mail.subject + "\","
-      "\"receiver\":\"" + mail.receiver + "\","
-      "\"message\":\"" + mail.message + "\""
-      + ",\"files\":\"" + mail.files + "\""
-      + ",\"assetDir\":\"" + mail.assetDir + "\""
-      + ",\"signoffName\":\"" + mail.signoffName + "\""
-      "}";
+  json payload = {
+    {"subject",    mail.subject},
+    {"receiver",   mail.receiver},
+    {"message",    mail.message},
+    {"assetsDir",  mail.assetDir},         
+    {"signoffName",mail.signoffName},
+    {"files",      json::array()}           
+  };
 
-  auto res = cli.Post("/send", json, "application/json");
+  if (!mail.files.empty())
+    payload["files"].push_back(mail.files);
+
+  const std::string body = payload.dump();
+
+  auto res = cli.Post("/send", body, "application/json");
   if (res && res->status == 200) {
       std::cout << "Message sent successfully: " << res->body << std::endl;
       return 0;

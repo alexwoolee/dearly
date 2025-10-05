@@ -76,38 +76,6 @@ const Home = () => {
   const handleStep5Back = () => {
     setCurrentStep('step4');
   }
-
-  const sendEmail = () => {
-    const json = {
-      "receiver": userEmail,
-      "subject": "A Dearly message to you my " + relationship + ", " + receiverName + "!",
-      "message": message ? message[0]['content'] : "",
-      "files": images,
-      "assetsDir": "assets",
-      "signoffName": userName,
-    }
-
-  fetch('http://localhost:8280/send', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(json)
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Failed to send email');
-    }
-    return response.text();
-  })
-  .then(data => {
-    console.log('Email sent successfully:', data);
-    // Optionally, show a success message or move to a confirmation step
-  })
-  .catch(error => {
-    console.error('Error sending email:', error);
-    // Optionally, show an error message to the user
-  });
   const handleStep5Home = () => {
     sendEmail();
     setCurrentStep('email');
@@ -144,7 +112,41 @@ const Home = () => {
     console.error('Error sending email:', error);
     // Optionally, show an error message to the user
   });
+  
+
+  const sendEmail = () => {
+    const json = {
+      "receiver": userEmail,
+      "subject": "A Dearly message to you my " + relationship + ", " + receiverName + "!",
+      "message": message ? message[0]['content'] : "",
+      "files": images,
+      "assetsDir": "assets",
+      "signoffName": userName,
+    }
+
+  fetch('http://localhost:8280/send', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(json)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to send email');
+    }
+    return response.text();
+  })
+  .then(data => {
+    console.log('Email sent successfully:', data);
+    // Optionally, show a success message or move to a confirmation step
+  })
+  .catch(error => {
+    console.error('Error sending email:', error);
+    // Optionally, show an error message to the user
+  });
   }
+}
 
   console.log('Current step:', currentStep)
 
@@ -188,11 +190,7 @@ const Home = () => {
             message={message}
             images={images}
             onBack={handleStep5Back}
-<<<<<<< HEAD
-            onSend={sendEmail}
-=======
             onSend={handleStep5Home}
->>>>>>> c66422af6ab8975be8e2340994feb9ef995f456b
           />
         )}
 
