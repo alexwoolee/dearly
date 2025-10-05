@@ -21,7 +21,7 @@ function Step3({ onNext, onBack, userName, receiverName }) {
   };
 
   return (
-    <div className="minimal-step-container">
+    <div className="step-container">
       <div className="floating-question">
         <h1 className="question-text">What's your relationship?</h1>
       </div>

@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600&display=swap');
+@import "tailwindcss";
 
 :root {
   --white-transparent: rgba(255, 255, 255, 0.5);
@@ -692,7 +692,7 @@ body {
 }
 
 /* Minimal UI Styles */
-.minimal-step-container,
+.step-container,
 .minimal-home-container {
   display: flex;
   flex-direction: column;

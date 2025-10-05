@@ -12,7 +12,7 @@ function Step1({ onNext, onBack }) {
   };
 
   return (
-    <div className="minimal-step-container">
+    <div className="step-container">
       <div className="floating-question">
         <h1 className="question-text">What's your name?</h1>
       </div>

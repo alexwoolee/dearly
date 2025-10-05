@@ -12,7 +12,7 @@ function Step4({ onNext, onBack, userName, receiverName, Message }) {
   };
 
   return (
-    <div className="minimal-step-container">
+    <div className="step-container">
       <div className="floating-question">
         <h1 className="question-text">What do you want to tell them?</h1>
       </div>
