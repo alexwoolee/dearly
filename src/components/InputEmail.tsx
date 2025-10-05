@@ -18,7 +18,7 @@ const InputEmail = ({ onEmailSubmit }) => {
         <div className="large-input-container">
           <input
             type="email"
-            placeholder="Enter your email"
+            placeholder="Enter their email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="large-input"

@@ -108,6 +108,8 @@ const Home = () => {
     console.error('Error sending email:', error);
     // Optionally, show an error message to the user
   });
+  const handleStep5Home = () => {
+    setCurrentStep('email');
   }
 
   console.log('Current step:', currentStep)
@@ -152,7 +154,11 @@ const Home = () => {
             message={message}
             images={images}
             onBack={handleStep5Back}
+<<<<<<< HEAD
             onSend={sendEmail}
+=======
+            onSend={handleStep5Home}
+>>>>>>> c66422af6ab8975be8e2340994feb9ef995f456b
           />
         )}
 
