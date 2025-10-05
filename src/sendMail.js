@@ -13,7 +13,7 @@ const __dirname  = path.dirname(__filename);
 
 // Express app setup
 const app  = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
 
 // Accept JSON payloads up to 10MB
 app.use(express.json({ limit: "10mb" }));
@@ -55,7 +55,7 @@ async function sendEmailJob(job, transporter) { // Send a single email job
     : (job.receiver ? [job.receiver] : []);
   if (!recipients.length) throw new Error("Missing receiver/recipients.");
   const subject     = job.subject || "Dearly";
-  const signoffName = job.signoffName || process.env.MAIL_SIGNOFF_NAME || "Alex Lee";
+  const signoffName = job.signoffName || process.env.MAIL_SIGNOFF_NAME;
   const imageFiles  = Array.isArray(job.files) ? job.files : (job.file ? [job.file] : []);
 
   const inlineImages = imageFiles.map((file, i) => { // Image attachments
