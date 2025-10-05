@@ -9,22 +9,35 @@ using namespace nlohmann;
 // subject: string, name: string, file: Blob,
 
 struct Mailer {
+  std::string receiver;
   std::string subject;
-  std::string name;
- // std::vector<std::byte> file_data;  // Use std::byte instead of void*
-  
-  Mailer(std::string subj, std::string n)
-      : subject(std::move(subj)), name(std::move(n)) {}
+  std::string message;
+  std::string files;
+  std::string assetDir;
+  std::string signoffName;
+
+  // Minimum constructor: receiver, subject, message
+  Mailer(const std::string& recvm, const std::string& subj, const std::string& msg)
+      : receiver(recvm), subject(subj), message(msg) {}
+
+  // 4-argument constructor
+  Mailer(const std::string& recvm, const std::string& subj, const std::string& msg, const std::string& files_)
+      : receiver(recvm), subject(subj), message(msg), files(files_) {}
+
+  // 5-argument constructor
+  Mailer(const std::string& recvm, const std::string& subj, const std::string& msg, const std::string& files_, const std::string& assetDir_)
+      : receiver(recvm), subject(subj), message(msg), files(files_), assetDir(assetDir_) {}
+
+  // 6-argument constructor
+  Mailer(const std::string& recvm, const std::string& subj, const std::string& msg, const std::string& files_, const std::string& assetDir_, const std::string& signoffName_)
+      : receiver(recvm), subject(subj), message(msg), files(files_), assetDir(assetDir_), signoffName(signoffName_) {}
 };
 
 
 std::string sendGeminiPrompt(const std::string& prompt, const std::string& GEMINI_KEY) {
-  // NOTE: Port 465 is typically used for SMTPS (email sending), not HTTP.
-  // Here, we'll send a simple HTTP POST request to localhost:465 as an example.
-  // In real use, you would use an SMTP library for email, but per instructions, we use HTTP.
 
   /*
-  
+
   curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent" \
 -H "x-goog-api-key: $GEMINI_API_KEY" \
 -H 'Content-Type: application/json' \
@@ -89,7 +102,14 @@ int sendMessage(Mailer mail) {
   cli.set_connection_timeout(5); // seconds
 
   // Prepare a simple JSON payload with subject and name
-  std::string json = "{\"subject\":\"" + mail.subject + "\",\"receiver\":\"" + mail.name + "\"}";
+  std::string json = "{"
+      "\"subject\":\"" + mail.subject + "\","
+      "\"receiver\":\"" + mail.receiver + "\","
+      "\"message\":\"" + mail.message + "\""
+      + ",\"files\":\"" + mail.files + "\""
+      + ",\"assetDir\":\"" + mail.assetDir + "\""
+      + ",\"signoffName\":\"" + mail.signoffName + "\""
+      "}";
 
   auto res = cli.Post("/send", json, "application/json");
   if (res && res->status == 200) {
@@ -147,7 +167,7 @@ public:
                 return;
             }
             std::cout << "Sent\n";
-            Mailer mail(params["name"], params["receiver"]);
+            Mailer mail(params["receiver"], params["subject"], params["message"]);
             int r = sendMessage(mail);
             std::cout << "Sent\n";
             res.set_content("Sent", "text/plain");
@@ -156,8 +176,6 @@ public:
              res.status = 400;
              res.set_content("Invalid JSON: " + std::string(e.what()), "text/plain");
            }
-
-          res.set_content(req.body, "text/plain");
       });
   
       svr.Post("/gemini", [gemini_key = GEMINI_K](const httplib::Request& req, httplib::Response& res) {
@@ -176,8 +194,7 @@ public:
           res.status = 400;
           res.set_content("Invalid JSON: " + std::string(e.what()), "text/plain");
         }
-  
-  
+
       });
 
     }
