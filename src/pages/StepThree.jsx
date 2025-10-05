@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 function Step3({ onNext, onBack, userName, receiverName }) {
   const [selectedRelationship, setSelectedRelationship] = useState("");
@@ -25,8 +25,9 @@ function Step3({ onNext, onBack, userName, receiverName }) {
       <div className="floating-question">
         <h1 className="question-text">What's your relationship?</h1>
       </div>
+
       
-      <form onSubmit={handleSubmit} className="minimal-form">
+      <form onSubmit={handleSubmit} className="paraImg-form">
         <div className="minimal-relationship-grid">
           {relationships.map((relationship) => (
             <button
@@ -40,14 +41,13 @@ function Step3({ onNext, onBack, userName, receiverName }) {
             </button>
           ))}
         </div>
+
         
-        <div className="navigation-buttons">
-          <button type="button" onClick={onBack} className="back-button">
-            ← Back
-          </button>
+        <div className="nav-btns">
+          <button type="button" onClick={onBack} className="back-btn">← Back</button>
           <button 
             type="submit" 
-            className="continue-button"
+            className="continue-btn"
             disabled={!selectedRelationship}
           >
             Continue →

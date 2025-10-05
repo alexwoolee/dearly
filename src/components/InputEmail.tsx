@@ -6,7 +6,7 @@ const InputEmail = ({ onEmailSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault(); // prevents default behaviour of form (reloading page on submit)
-    if (email.trim()) { // if email exists
+    if (email.trim()) { 
       console.log("sending to email : ", email);
       onEmailSubmit && onEmailSubmit(email); // submit email
     }
@@ -14,7 +14,7 @@ const InputEmail = ({ onEmailSubmit }) => {
 
   return (
     <div className="email-container">      
-      <form onSubmit={handleSubmit} className="minimal-form">
+      <form onSubmit={handleSubmit} className="simple-form">
         <div className="large-input-container">
           <input
             type="email"

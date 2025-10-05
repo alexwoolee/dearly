@@ -16,8 +16,9 @@ function Step2({ onNext, onBack, userName }) {
       <div className="floating-question">
         <h1 className="question-text">Who are you writing to?</h1>
       </div>
+
       
-      <form onSubmit={handleSubmit} className="minimal-form">
+      <form onSubmit={handleSubmit} className="simple-form">
         <div className="large-input-container">
           <input
             type="text"
@@ -29,13 +30,10 @@ function Step2({ onNext, onBack, userName }) {
           />
         </div>
         
-        <div className="navigation-buttons">
-          <button type="button" onClick={onBack} className="back-button">
-            ← Back
-          </button>
-          <button type="submit" className="continue-button">
-            Continue →
-          </button>
+        
+        <div className="nav-btns">
+          <button type="button" onClick={onBack} className="back-btn">← Back</button>
+          <button type="submit" className="continue-btn">Continue →</button>
         </div>
       </form>
     </div>

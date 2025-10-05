@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 function Step1({ onNext, onBack }) {
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState(""); 
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (userName.trim()) {
-      console.log("User name:", userName);
-      onNext && onNext(userName);
+    e.preventDefault(); // prevents default behavior of form submission
+    if (userName.trim()) { // if user enters "     " for example, if condition will not pass
+      console.log("Username:", userName.trim());
+      onNext && onNext(userName.trim());
     }
   };
 
@@ -17,25 +17,24 @@ function Step1({ onNext, onBack }) {
         <h1 className="question-text">What's your name?</h1>
       </div>
       
-      <form onSubmit={handleSubmit} className="minimal-form">
+
+      {/* HANDLE INPUT */}
+      <form onSubmit={handleSubmit} className="simple-form">
         <div className="large-input-container">
           <input
             type="text"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             placeholder="Enter your name"
-          className="large-input"
+            className="large-input"
             required
           />
         </div>
         
-        <div className="navigation-buttons">
-          <button type="button" onClick={onBack} className="back-button">
-            ← Back
-          </button>
-          <button type="submit" className="continue-button">
-            Continue →
-          </button>
+
+        <div className="nav-btns">
+          <button type="button" onClick={onBack} className="back-btn">← Back</button>
+          <button type="submit" className="continue-btn">Continue →</button>
         </div>
       </form>
     </div>
