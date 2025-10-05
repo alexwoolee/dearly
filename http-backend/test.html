@@ -16,6 +16,9 @@
         <label for="type">Type:</label>
         <input type="text" id="type" name="type" required placeholder="e.g. text, image, file"><br><br>
 
+        <label for="type">Subj:</label>
+        <input type="text" id="subject" name="subject" required placeholder="e.g. text, image, file"><br><br>
+
         <label for="file">File:</label>
         <input type="file" id="file" name="file"><br><br>
 
@@ -34,10 +37,11 @@
             name: form.name.value,
             receiver: form.receiver.value,
             type: form.type.value,
+            subject: form.subject.value,
             message: form.message.value,
             file: form.file.files[0] || null,
         };
-        fetch('http://localhost:8080/echo', {
+        fetch('http://localhost:8280/send', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
