@@ -44,8 +44,9 @@ std::string sendGeminiPrompt(std::string prompt) {
     
     */
 
-    httplib::Client cli("https://generativelanguage.googleapis.com/v1beta/models");
+    httplib::SSLClient cli("generativelanguage.googleapis.com", 443);
     cli.set_connection_timeout(5); // seconds
+   // cli.enable_server_certificate_verification(false); // Disable SSL verification for testing
 
     cli.set_default_headers({{"x-goog-api-key", GEMINI_KEY}});
     // Prepare a simple JSON payload with subject and name
@@ -61,18 +62,22 @@ std::string sendGeminiPrompt(std::string prompt) {
       ]
     })";
 
-    auto res = cli.Post("/gemini-2.5-flash:generateContent", json, "application/json");
-    std::cout << res << '\n';
-    if (res && res->status == 200) {
+    auto res = cli.Post("/v1beta/models/gemini-2.5-flash:generateContent", json, "application/json");
+    
+    if (!res) {
+        std::cerr << "Failed to connect to Gemini API - res is null" << std::endl;
+        return "Error: Connection failed";
+    }
+    
+    std::cout << "Response status: " << res->status << std::endl;
+    std::cout << "Response body: " << res->body << std::endl;
+    
+    if (res->status == 200) {
         std::cout << "Message sent successfully: " << res->body << std::endl;
         return res->body;
     } else {
-        std::cerr << "Failed to send message to port 465" << std::endl;
-
-        if (res && res->status >= 400)
-            return res->body;
-        
-        return "Error";
+        std::cerr << "Failed to send message to Gemini API. Status: " << res->status << std::endl;
+        return res->body;
     }
     
 
