@@ -11,10 +11,10 @@ using namespace nlohmann;
 struct Mailer {
   std::string subject;
   std::string name;
-  std::vector<std::byte> file_data;  // Use std::byte instead of void*
+ // std::vector<std::byte> file_data;  // Use std::byte instead of void*
   
-  Mailer(std::string subj, std::string n, std::vector<std::byte> data)
-      : subject(std::move(subj)), name(std::move(n)), file_data(std::move(data)) {}
+  Mailer(std::string subj, std::string n)
+      : subject(std::move(subj)), name(std::move(n)) {}
 };
 
 
@@ -85,11 +85,11 @@ int sendMessage(Mailer mail) {
   // Here, we'll send a simple HTTP POST request to localhost:465 as an example.
   // In real use, you would use an SMTP library for email, but per instructions, we use HTTP.
 
-  httplib::Client cli("localhost", 465);
+  httplib::Client cli("localhost", 8000);
   cli.set_connection_timeout(5); // seconds
 
   // Prepare a simple JSON payload with subject and name
-  std::string json = "{\"subject\":\"" + mail.subject + "\",\"name\":\"" + mail.name + "\"}";
+  std::string json = "{\"subject\":\"" + mail.subject + "\",\"receiver\":\"" + mail.name + "\"}";
 
   auto res = cli.Post("/send", json, "application/json");
   if (res && res->status == 200) {
@@ -136,8 +136,27 @@ public:
       });
   
       // Define a POST endpoint
-      svr.Post("/echo", [](const httplib::Request& req, httplib::Response& res) {
+      svr.Post("/send", [](const httplib::Request& req, httplib::Response& res) {
           std::cout << req.body << '\n';
+
+          try {
+            json params = json::parse(req.body);
+            if (!params.contains("name")) {
+                res.status = 400;
+                res.set_content("Missing 'prompt' field", "text/plain");
+                return;
+            }
+            std::cout << "Sent\n";
+            Mailer mail(params["name"], params["receiver"]);
+            int r = sendMessage(mail);
+            std::cout << "Sent\n";
+            res.set_content("Sent", "text/plain");
+
+           } catch (const json::parse_error& e) {
+             res.status = 400;
+             res.set_content("Invalid JSON: " + std::string(e.what()), "text/plain");
+           }
+
           res.set_content(req.body, "text/plain");
       });
   
