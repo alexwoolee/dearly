@@ -60,13 +60,13 @@ const StepFive = ({ userEmail, userName, receiverName, relationship, message, on
         </div>
       </div>
 
-      <div className="navigation-buttons" style={{ marginTop: '20px' }}>
+      <div className="nav-btns" style={{ marginTop: '20px' }}>
         <button type="button" onClick={onSend} className="send-button">
           Send
         </button>
       </div>
-      <div className="navigation-buttons">
-        <button type="button" onClick={onBack} className="back-button">
+      <div className="nav-btns">
+        <button type="button" onClick={onBack} className="back-btn">
           ← Back
         </button>
       </div>

@@ -1368,7 +1368,7 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
-  border-radius: 0;
+  border-radius: 16px;
 }
 
 .next-button:hover {
@@ -1412,4 +1412,23 @@ body {
 
 .option-button:hover {
   background-color: #45a049;
+}
+
+.send-button {
+  background: transparent;
+  color: var(--text-light);
+  border: 1px solid var(--sand-medium);
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 300;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  border-radius: 16px;
+}
+
+.send-button:hover {
+  color: white;
+  border-color: var(--text-dark);
+  background: black;
 }

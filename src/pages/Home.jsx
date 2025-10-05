@@ -72,6 +72,11 @@ const Home = () => {
     setCurrentStep('step3');
   }
 
+  // step 5 handler
+  const handleStep5Back = () => {
+    setCurrentStep('step4');
+  }
+
   console.log('Current step:', currentStep)
 
   return (
@@ -113,7 +118,7 @@ const Home = () => {
             relationship={relationship}
             message={message}
             images={images}
-            onBack={handleStep4Back}
+            onBack={handleStep5Back}
           />
         )}
 
