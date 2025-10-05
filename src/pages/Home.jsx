@@ -77,6 +77,10 @@ const Home = () => {
     setCurrentStep('step4');
   }
 
+  const handleStep5Home = () => {
+    setCurrentStep('email');
+  }
+
   console.log('Current step:', currentStep)
 
   return (
@@ -119,6 +123,7 @@ const Home = () => {
             message={message}
             images={images}
             onBack={handleStep5Back}
+            onSend={handleStep5Home}
           />
         )}
 
