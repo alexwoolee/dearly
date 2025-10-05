@@ -160,7 +160,6 @@ const Home = () => {
           <div>
             <HomeFront />
             <InputEmail onEmailSubmit={handleEmailSubmit} />
-            <HomeFeatures />
           </div>
         )}
         
