@@ -9,8 +9,6 @@
   --color-indigo: #1f1e39;
   --color-dark-grey: #1a1a1a;
   --color-black: rgb(0, 0, 0);
-  
-  /* Light Sand Theme */
   --sand-cream: #faf8f3;
   --sand-light: #f5f1e8;
   --sand-medium: #e8e0d1;
@@ -29,11 +27,11 @@ body {
   background: var(--sand-cream);
 }
 
-/* logo */
+/* general */
+
 .logo {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #3345ea;
 }
 
 /* home section */
@@ -111,14 +109,6 @@ body {
 
 .hero-content {
   text-align: center;
-}
-
-.hero-title {
-  font-size: 2.25rem;
-  font-weight: bold;
-  color: #111827;
-  margin-bottom: 1.5rem;
-  line-height: 1.2;
 }
 
 .hero-title-accent {
@@ -752,9 +742,18 @@ body {
   letter-spacing: -0.02em;
 }
 
-.minimal-form {
+.simple-form {
   width: 100%;
-  max-width: 600px;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.paraImg-form {
+  width: 100%;
+  max-width: 1000px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -792,7 +791,7 @@ body {
   font-weight: 300;
 }
 
-.navigation-buttons {
+.nav-btns {
   display: flex;
   gap: 2rem;
   align-items: center;
@@ -800,25 +799,26 @@ body {
   margin-top: 2rem;
 }
 
-.back-button {
+.back-btn {
   background: transparent;
   color: var(--text-light);
   border: 1px solid var(--sand-medium);
   padding: 0.8rem 2rem;
+  min-width: 154px;
   font-size: 1rem;
   font-weight: 300;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
-  border-radius: 0;
+  border-radius: 8px;
 }
 
-.back-button:hover {
+.back-btn:hover {
   color: var(--text-dark);
   border-color: var(--text-dark);
 }
 
-.continue-button {
+.continue-btn {
   background: transparent;
   color: var(--text-dark);
   border: 1px solid var(--text-dark);
@@ -828,15 +828,15 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
-  border-radius: 0;
+  border-radius: 8px;
 }
 
-.continue-button:hover {
+.continue-btn:hover {
   background: var(--text-dark);
   color: var(--white);
 }
 
-.continue-button:disabled {
+.continue-btn:disabled {
   background: transparent;
   color: var(--text-light);
   border-color: var(--text-light);
@@ -1288,4 +1288,147 @@ body {
     min-width: 150px;
     width: 100%;
   }
+}
+
+/* step 4 */
+.message-textarea {
+  width: 100%;
+  min-width: 850px;
+  min-height: 150px;
+  margin: 4rem 0 0 0;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  resize: none;  
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.message-textarea:focus {
+  outline: none;
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.input-div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.input-div:hover {
+  border-color: black;
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+}
+
+.input-text {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.browse {
+  font-weight: 600;
+  color: black;
+}
+
+.image-files {
+  display: none;
+}
+
+.image-preview {
+  border-radius: 0.5rem;
+  border: 1px solid #ddd;
+  object-fit: cover;
+  width: 50px;
+  height: 50px;
+}
+
+.next-button {
+  background: transparent;
+  color: var(--text-light);
+  border: 1px solid var(--sand-medium);
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 300;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  border-radius: 16px;
+}
+
+.next-button:hover {
+  color: var(--text-dark);
+  border-color: var(--text-dark);
+}
+
+.plus-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background-color: #4CAF50; /* match scheme */
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.plus-button:hover {
+  background-color: #45a049;
+}
+
+.option-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.option-button {
+  flex: 1;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.option-button:hover {
+  background-color: #45a049;
+}
+
+.send-button {
+  background: transparent;
+  color: var(--text-light);
+  border: 1px solid var(--sand-medium);
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 300;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  border-radius: 16px;
+}
+
+.send-button:hover {
+  color: white;
+  border-color: var(--text-dark);
+  background: black;
 }
