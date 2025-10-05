@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Form</title>
+</head>
+<body>
+    <h1>Send a Message</h1>
+    <form id="jsonForm">
+        <label for="prompt">prompt:</label>
+        <input type="text" id="prompt" name="prompt" required><br><br>
+        <!-- Files input is omitted for JSON-only submission -->
+
+        <button type="submit">Send</button>
+    </form>
+    <script>
+    document.getElementById('jsonForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const data = {
+            prompt: form.prompt.value,
+        };
+        fetch('http://localhost:8080/gemini', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.text())
+        .then(text => alert('Server response: ' + text))
+        .catch(err => alert('Error: ' + err));
+    });
+    </script>
+    </form>
+</body>
+</html>
