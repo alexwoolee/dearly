@@ -52,7 +52,7 @@ std::string sendGeminiPrompt(const std::string& prompt, const std::string& GEMIN
   std::cout << "Response body: " << res->body << std::endl;
   
   if (res->status == 200) {
-      std::cout << "Message sent successfully: " << res->body << std::endl;
+      std::cout << "API sent successfully: " << res->body << std::endl;
       return res->body;
   } else {
       std::cerr << "Failed to send message to Gemini API. Status: " << res->status << std::endl;
