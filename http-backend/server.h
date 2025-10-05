@@ -36,18 +36,23 @@ public:
     });
 
     // Define a POST endpoint
-    svr.Post("/send", [](const httplib::Request& req, httplib::Response& res) {
+    svr.Post("/send", [gemini_key = GEMINI_K](const httplib::Request& req, httplib::Response& res) {
         std::cout << req.body << '\n';
 
         try {
           json params = json::parse(req.body);
-          if (!params.contains("name")) {
+          if (!params.contains("receiver") || !params.contains("subject") || !params.contains("subject")) {
               res.status = 400;
               res.set_content("Missing 'prompt' field", "text/plain");
               return;
           }
           std::cout << "Sent\n";
-          Mailer mail(params["receiver"], params["subject"], params["message"]);
+          std::string b = "craft a endearing message based on this inspiration. Dont offer suggestions, write the message instead: ";
+          std::string c = params["message"];
+          json v = json::parse(sendGeminiPrompt(b+c,gemini_key));
+          std::string p = v["candidates"][0]["content"]["parts"][0]["text"];
+          std::cout << "->" << p << '/n';
+          Mailer mail(params["receiver"], params["subject"], p);
           int r = sendMessage(mail);
           std::cout << "Sent\n";
           res.set_content("Sent", "text/plain");
